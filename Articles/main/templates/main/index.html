@@ -1,0 +1,42 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+    <ul class="list_of_categories">
+        {% if cat_selected == 0 %}
+        <li class="selected">Все категории</li>
+        {% else %}
+        <li><a class="cat_link" href="{% url 'home' %}">Все категории</a></li>
+        {% endif %}
+        {% for c in cats %}
+        {% if c.pk == cat_selected %}
+        <li class="selected">{{c.name}}</li>
+        {% else %}
+        <li><a class="cat_link" href="{{c.get_absolute_url}}">{{c.name}}</a></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+
+    {% for p in posts %}
+	<div class="container_article">
+        <div class="container1">
+            <p>Категория: {{p.cat}}</p>
+            <p>Дата: {{p.time_update|date:"d-m-Y H:i:s"}}</p>
+        </div>
+        <div class="container2">
+            {% if p.photo %}
+            <p><a href="{{ p.get_absolute_url }}"><img src="{{p.photo.url}}"></a></p>
+            {% endif %}
+            <div class="container3">
+                <h1>{{p.title}}</h1>
+                <br>
+                {{p.content|linebreaks|truncatewords:50}}
+                <br><br><br>
+                <p class="shift_the_button"><a class="read_article" href="{{ p.get_absolute_url }}">Читать пост</a></p>
+            </div>
+        </div>
+	</div>
+	{% endfor %}
+
+{% endblock %}

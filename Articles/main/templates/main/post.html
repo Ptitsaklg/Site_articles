@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<div class="container_post">
+    <h1>{{post.title}}</h1>
+    <br>
+    {% if post.photo %}
+    <p><img class="article_photo" src="{{post.photo.url}}"></p>
+    {% endif %}
+    <div class="content_post">
+        {{post.content|linebreaks}}
+    </div>
+</div>
+
+{% endblock %}

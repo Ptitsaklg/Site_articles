@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}"/>
+    <link rel="shortcut icon" href="{% static 'main/images/logo.png' %}"/>
+    <title>{{title}}</title>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header_menu">
+            <a href="{% url 'home' %}"><img class="logo" src="{% static 'main/images/logo.png' %}" alt="logo"></a>
+            <h2>Опасные растения и насекомые России</h2>
+            <nav class="nav">
+                {% for m in menu %}
+                <a class="nav_link" href="{% url m.url_name %}">{{m.title}}</a>
+                {% endfor %}
+                {% if request.user.is_authenticated %}
+                <span class="nav_link">{{user.username}}<a class="nav_link" href="{% url 'logout' %}">Выйти</a></span>
+                {% else %}
+                <a class="nav_link" href="{% url 'register' %}">Регистрация</a><a class="nav_link" href="{% url 'login' %}">Войти</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    {% if page_obj.has_other_pages %}
+    <nav class="list-pages">
+        <ul>
+            {% if page_obj.has_previous %}
+            <li class="page-num"><a href="?page={{page_obj.previous_page_number}}">&lt;</a></li>
+            {% endif %}
+            {% for p in page_obj.paginator.page_range %}
+            {% if page_obj.number == p %}
+            <li class="page-num selected">{{p}}</li>
+            {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+            <li class="page-num"><a href="?page={{p}}">{{p}}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-num"><a href="?page={{page_obj.next_page_number}}">&gt;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+</body>
+</html>
